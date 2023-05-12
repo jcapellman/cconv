@@ -4,7 +4,7 @@ namespace Bibliothek
 {
     public class DasGut
     {
-        [UnmanagedCallersOnly(EntryPoint = "siesquare")]
+        [UnmanagedCallersOnly(EntryPoint = "SieSquare")]
         public static int SieSquare(int x)
         {
             return x * x;
