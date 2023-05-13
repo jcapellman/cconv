@@ -1,4 +1,4 @@
-﻿namespace csharp2py.Objects
+﻿namespace cconv.Objects
 {
     internal class ConverterOptions
     {

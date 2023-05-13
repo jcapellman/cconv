@@ -1,6 +1,6 @@
-﻿using csharp2py.Objects;
+﻿using cconv.Objects;
 
-namespace csharp2py
+namespace cconv
 {
     internal class Program
     {

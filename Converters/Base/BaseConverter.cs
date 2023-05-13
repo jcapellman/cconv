@@ -1,9 +1,9 @@
-﻿using csharp2py.Objects;
+﻿using cconv.Objects;
 
 using System.Reflection;
 using System.Text;
 
-namespace csharp2py.Converters.Base
+namespace cconv.Converters.Base
 {
     internal abstract class BaseConverter
     {

@@ -1,10 +1,10 @@
-﻿using csharp2py.Converters.Base;
-using csharp2py.Objects;
+﻿using cconv.Converters.Base;
+using cconv.Objects;
 
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-namespace csharp2py
+namespace cconv
 {
     internal class Converter
     {

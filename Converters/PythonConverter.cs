@@ -1,8 +1,8 @@
-﻿using csharp2py.Converters.Base;
+﻿using cconv.Converters.Base;
 
 using System.Reflection;
 
-namespace csharp2py.Converters
+namespace cconv.Converters
 {
     internal class PythonConverter : BaseConverter
     {
