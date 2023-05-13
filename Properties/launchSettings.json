@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "csharp2py": {
-      "commandName": "Project",
-      "commandLineArgs": "inputlibrary .\\Bibliothek.dll"
-    }
-  }
-}
