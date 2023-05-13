@@ -1,10 +1,40 @@
-﻿using System.Reflection;
-using System.Runtime.InteropServices;
+﻿using csharp2py.Common;
+using csharp2py.Objects;
 
-namespace pyGen
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Text;
+
+namespace csharp2py
 {
-    internal class Program
+    internal class Converter
     {
+        private readonly ConverterOptions _options;
+
+        public Converter(ConverterOptions options)
+        {
+            _options = options;
+        }
+
+        private static string GetTemplate(string templateName = AppConstants.DEFAULT_TEMPLATE_NAME)
+        {
+            Assembly assembly = Assembly.GetExecutingAssembly()
+                ?? throw new ApplicationException("Could not obtain the assembly");
+
+            var resourceNames = assembly.GetManifestResourceNames();
+
+            var resourceName = resourceNames.FirstOrDefault(a => a.Contains(templateName, StringComparison.OrdinalIgnoreCase))
+                ?? throw new ArgumentOutOfRangeException($"Invalid template name {templateName}");
+
+            var resourceStream = assembly.GetManifestResourceStream(resourceName) 
+                ?? throw new ApplicationException($"Could not retrieve the {resourceName}");
+
+            byte[] resourceBytes = new byte[resourceStream.Length];
+            resourceStream.Read(resourceBytes, 0, (int)resourceStream.Length);
+
+            return Encoding.UTF8.GetString(resourceBytes);
+        }
+
         private static Dictionary<string, List<MethodInfo>> GetClasses(string fileName)
         {
             if (!File.Exists(fileName))
@@ -12,7 +42,15 @@ namespace pyGen
                 throw new FileNotFoundException(fileName);
             }
 
-            var asm = Assembly.LoadFrom(fileName);
+            Assembly asm;
+
+            try
+            {
+                asm = Assembly.LoadFrom(fileName);
+            } catch (BadImageFormatException)
+            {
+                throw new ArgumentException($"{fileName} was not a valid C# library");
+            }
 
             var types = asm.GetTypes();
 
@@ -25,7 +63,7 @@ namespace pyGen
                     continue;
                 }
 
-                var methodInfos = type.GetMethods().Where(a => a.Attributes.HasFlag(MethodAttributes.Public) && 
+                var methodInfos = type.GetMethods().Where(a => a.Attributes.HasFlag(MethodAttributes.Public) &&
                     a.Attributes.HasFlag(MethodAttributes.Static)).ToList();
 
                 var functions = new List<MethodInfo>();
@@ -49,13 +87,13 @@ namespace pyGen
             return result;
         }
 
-        static void Main(string[] args)
+        public void Convert()
         {
-            var libName = args[0];
+            var classes = GetClasses(_options.InputLibrary);
 
-            var classes = GetClasses(libName);
+            var baseTemplate = GetTemplate();
 
-            var baseTemplate = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "template.py"));
+            var csharpLibFileInfo = new FileInfo(_options.InputLibrary);
 
             foreach (var className in classes.Keys)
             {
@@ -63,7 +101,7 @@ namespace pyGen
 
                 classTemplate = classTemplate.Replace("CLASS_NAME", className);
 
-                classTemplate = classTemplate.Replace("LIB_NAME", libName);
+                classTemplate = classTemplate.Replace("LIB_NAME", csharpLibFileInfo.Name);
 
                 var functionBlock = string.Empty;
 
@@ -91,7 +129,12 @@ namespace pyGen
 
                 classTemplate = classTemplate.Replace("FUNCTION_BLOCK", functionBlock);
 
-                File.WriteAllText(Path.Combine(AppContext.BaseDirectory, $"{className}.py"), classTemplate);
+                if (!Path.Exists(_options.OutputPath))
+                {
+                    Directory.CreateDirectory(_options.OutputPath);
+                }
+
+                File.WriteAllText(Path.Combine(_options.OutputPath, $"{className}.py"), classTemplate);
             }
         }
     }
