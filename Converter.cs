@@ -1,9 +1,8 @@
-﻿using csharp2py.Common;
+﻿using csharp2py.Converters.Base;
 using csharp2py.Objects;
 
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace csharp2py
 {
@@ -14,25 +13,6 @@ namespace csharp2py
         public Converter(ConverterOptions options)
         {
             _options = options;
-        }
-
-        private static string GetTemplate(string templateName = AppConstants.DEFAULT_TEMPLATE_NAME)
-        {
-            Assembly assembly = Assembly.GetExecutingAssembly()
-                ?? throw new ApplicationException("Could not obtain the assembly");
-
-            var resourceNames = assembly.GetManifestResourceNames();
-
-            var resourceName = resourceNames.FirstOrDefault(a => a.Contains(templateName, StringComparison.OrdinalIgnoreCase))
-                ?? throw new ArgumentOutOfRangeException($"Invalid template name {templateName}");
-
-            var resourceStream = assembly.GetManifestResourceStream(resourceName) 
-                ?? throw new ApplicationException($"Could not retrieve the {resourceName}");
-
-            byte[] resourceBytes = new byte[resourceStream.Length];
-            resourceStream.Read(resourceBytes, 0, (int)resourceStream.Length);
-
-            return Encoding.UTF8.GetString(resourceBytes);
         }
 
         private static Dictionary<string, List<MethodInfo>> GetClasses(string fileName)
@@ -87,55 +67,23 @@ namespace csharp2py
             return result;
         }
 
+        private static BaseConverter? GetConverter(string language)
+        {
+            var converters = Assembly.GetExecutingAssembly().GetTypes().Where(a => a.BaseType == typeof(BaseConverter)).Select(b => (BaseConverter?)Activator.CreateInstance(b)).ToList();
+
+            return converters.FirstOrDefault(a => a != null && string.Equals(a.LanguageName, language, StringComparison.OrdinalIgnoreCase));
+        }
+
         public void Convert()
         {
-            var classes = GetClasses(_options.InputLibrary);
+            var converter = GetConverter(_options.OutputLanguage)
+                ?? throw new ArgumentOutOfRangeException($"{_options.OutputLanguage} was not found in the assembly");
 
-            var baseTemplate = GetTemplate();
+            var classes = GetClasses(_options.InputLibrary);
 
             var csharpLibFileInfo = new FileInfo(_options.InputLibrary);
 
-            foreach (var className in classes.Keys)
-            {
-                var classTemplate = baseTemplate;
-
-                classTemplate = classTemplate.Replace("CLASS_NAME", className);
-
-                classTemplate = classTemplate.Replace("LIB_NAME", csharpLibFileInfo.Name);
-
-                var functionBlock = string.Empty;
-
-                foreach (var function in classes[className])
-                {
-                    var line = $"\tdef {function.Name}";
-
-                    var parameters = string.Empty;
-
-                    if (function.GetParameters().Any())
-                    {
-                        parameters = string.Join(',', function.GetParameters().Select(a => a.Name));
-                    }
-
-                    line += $"({parameters}):{System.Environment.NewLine}\t\t";
-
-                    line += $"return __library.{function.Name}({parameters})";
-
-                    line += System.Environment.NewLine;
-
-                    line += System.Environment.NewLine;
-
-                    functionBlock += line;
-                }
-
-                classTemplate = classTemplate.Replace("FUNCTION_BLOCK", functionBlock);
-
-                if (!Path.Exists(_options.OutputPath))
-                {
-                    Directory.CreateDirectory(_options.OutputPath);
-                }
-
-                File.WriteAllText(Path.Combine(_options.OutputPath, $"{className}.py"), classTemplate);
-            }
+            converter.Convert(classes, csharpLibFileInfo.Name, _options);
         }
     }
 }

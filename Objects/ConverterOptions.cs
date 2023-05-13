@@ -4,6 +4,8 @@
     {
         public string InputLibrary { get; set; } = string.Empty;
 
+        public string OutputLanguage { get; set; } = string.Empty;
+
         public string OutputPath { get; set; } = AppContext.BaseDirectory;
 
         public ConverterOptions(string[] commandLineArguments)
