@@ -2,17 +2,28 @@
 {
     internal class ConverterOptions
     {
-        public string InputLibrary { get; set; } = string.Empty;
+        public string InputLibrary { get; private set; } = string.Empty;
 
-        public string OutputLanguage { get; set; } = string.Empty;
+        public string OutputLanguage { get; private set; } = string.Empty;
 
-        public string OutputPath { get; set; } = AppContext.BaseDirectory;
+        public string OutputPath { get; private set; } = AppContext.BaseDirectory;
 
+        /// <summary>
+        /// Accepts the string[] from the command line and parses them
+        /// </summary>
+        /// <param name="commandLineArguments"></param>
+        /// <exception cref="ArgumentException">Throws if the parameters were not in pairs or if no arguments were passed in</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Throws if the parameter passed in does not match an expected argument</exception>
         public ConverterOptions(string[] commandLineArguments)
         {
-            if (commandLineArguments.Length == 0 || commandLineArguments.Length % 2 != 0)
+            if (commandLineArguments.Length == 0)
             {
-                throw new ArgumentException($"Invalid parameter ({nameof(commandLineArguments)}) - must come in pairs");
+                throw new ArgumentException("Cannot run without arguments");
+            }
+
+            if (commandLineArguments.Length % 2 != 0)
+            {
+                throw new ArgumentException("Invalid arguments - they must come in pairs");
             }
 
             var properties = GetType().GetProperties();

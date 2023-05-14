@@ -6,7 +6,22 @@ namespace cconv
     {
         static void Main(string[] args)
         {
-            var options = new ConverterOptions(args);
+            ConverterOptions options;
+
+            try
+            {
+                options = new ConverterOptions(args);
+            } catch (ArgumentOutOfRangeException are)
+            {
+                Console.WriteLine(are.Message);
+
+                return;
+            } catch (ArgumentException ae)
+            {
+                Console.WriteLine(ae.Message);
+
+                return;
+            }
 
             var converter = new Converter(options);
 
