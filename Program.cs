@@ -1,4 +1,5 @@
-﻿using cconv.Objects;
+﻿using cconv.Converters.Base;
+using cconv.Objects;
 
 namespace cconv
 {
@@ -23,9 +24,37 @@ namespace cconv
                 return;
             }
 
-            var converter = new Converter(options);
+            BaseConverter converter;
 
-            converter.Convert();
+            try
+            {
+                converter = BaseConverter.GetConverter(options.OutputLanguage);
+            } catch (ArgumentOutOfRangeException are)
+            {
+                Console.WriteLine(are.Message);
+
+                return;
+            }
+
+            try
+            {
+                converter.Convert(options);
+            } catch (FileNotFoundException fnfe)
+            {
+                Console.WriteLine(fnfe.Message);
+
+                return;
+            } catch (ArgumentOutOfRangeException are)
+            {
+                Console.WriteLine(are.Message);
+
+                return;
+            } catch (ApplicationException ae)
+            {
+                Console.WriteLine(ae.Message);
+
+                return;
+            }
         }
     }
 }
