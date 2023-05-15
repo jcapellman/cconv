@@ -44,6 +44,8 @@ jobs:
         run: |
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"jcapellman_cconv_AYghjr03ks1oG8FRNLLH" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}"
           dotnet build
+          dotnet tool update dotnet-reportgenerator-globaltool -g
+          
            dotnet test .\cconv.tests\cconv.tests.csproj --no-build --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
           reportgenerator "-reports:*\cconv.tests\TestResults\*\coverage.opencover.xml" "-targetdir:sonarqubecoverage" "-reporttypes:SonarQube"
 
