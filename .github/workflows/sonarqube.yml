@@ -47,6 +47,6 @@ jobs:
           dotnet tool update dotnet-reportgenerator-globaltool -g
           
            dotnet test .\cconv.tests\cconv.tests.csproj --no-build --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
-          reportgenerator "-reports:.\cconv.tests\TestResults\*\coverage.opencover.xml" "-targetdir:sonarqubecoverage" "-reporttypes:SonarQube"
+          reportgenerator "-reports:*\cconv.tests\TestResults\*\coverage.opencover.xml" "-targetdir:sonarqubecoverage" "-reporttypes:SonarQube"
 
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
