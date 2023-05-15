@@ -1,6 +1,7 @@
 ﻿using cconv.Converters.Base;
 
 using System.Reflection;
+using System.Text;
 
 namespace cconv.Converters
 {
@@ -18,7 +19,7 @@ namespace cconv.Converters
 
             template = template.Replace("LIB_NAME", cSharpFileName);
 
-            var functionBlock = string.Empty;
+            var functionBlock = new StringBuilder();
 
             foreach (var function in functions)
             {
@@ -37,12 +38,10 @@ namespace cconv.Converters
 
                 line += System.Environment.NewLine;
 
-                line += System.Environment.NewLine;
-
-                functionBlock += line;
+                functionBlock.AppendLine(line);
             }
 
-            return template.Replace("FUNCTION_BLOCK", functionBlock);
+            return template.Replace("FUNCTION_BLOCK", functionBlock.ToString());
         }
     }
 }
