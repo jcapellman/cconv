@@ -1,6 +1,6 @@
 using cconv.Objects;
 
-namespace cconv.UnitTests
+namespace cconv.tests.Objects
 {
     [TestClass]
     public class ConverterOptionsTests
@@ -51,7 +51,7 @@ namespace cconv.UnitTests
             };
 
             // Act and Assert
-           var _ = new ConverterOptions(commandLineArguments);
+            var _ = new ConverterOptions(commandLineArguments);
         }
 
         [TestMethod]
