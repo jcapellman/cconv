@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cconv", "cconv/cconv.csproj", "{459F62CE-D4C0-4A7E-B0AA-74BD95B98E5C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cconv", "cconv\cconv.csproj", "{459F62CE-D4C0-4A7E-B0AA-74BD95B98E5C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cconv.tests", "cconv.tests\cconv.tests.csproj", "{6A5F117F-F551-4475-94A3-F73ED13236F9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{459F62CE-D4C0-4A7E-B0AA-74BD95B98E5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{459F62CE-D4C0-4A7E-B0AA-74BD95B98E5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{459F62CE-D4C0-4A7E-B0AA-74BD95B98E5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A5F117F-F551-4475-94A3-F73ED13236F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A5F117F-F551-4475-94A3-F73ED13236F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A5F117F-F551-4475-94A3-F73ED13236F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A5F117F-F551-4475-94A3-F73ED13236F9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

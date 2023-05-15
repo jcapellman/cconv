@@ -11,4 +11,8 @@
   <ItemGroup>
     <EmbeddedResource Include="Templates\BasePythonClass.py" />
   </ItemGroup>
+
+	<ItemGroup>
+		<InternalsVisibleTo Include="cconv.tests" />
+	</ItemGroup>
 </Project>
