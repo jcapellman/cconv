@@ -128,6 +128,13 @@ namespace cconv.Converters.Base
                 return;
             }
 
+            if (!Path.Exists(options.OutputPath))
+            {
+                Directory.CreateDirectory(options.OutputPath);
+
+                Console.WriteLine($"Output path {options.OutputPath} did not exist - successfully created it");
+            }
+
             var csharpLibFileInfo = new FileInfo(options.InputLibrary);
 
             var baseTemplate = GetTemplate(TemplateName);
@@ -137,11 +144,6 @@ namespace cconv.Converters.Base
                 var classTemplate = baseTemplate;
 
                 classTemplate = LangConvert(classTemplate, className, csharpClasses[className], csharpLibFileInfo.Name);
-
-                if (!Path.Exists(options.OutputPath))
-                {
-                    Directory.CreateDirectory(options.OutputPath);
-                }
 
                 var outputPath = Path.Combine(options.OutputPath, $"{className}.{FileExtension}");
 
