@@ -38,7 +38,7 @@ namespace cconv.Converters
 
                 line += System.Environment.NewLine;
 
-                functionBlock.AppendLine(line);
+                functionBlock = functionBlock.AppendLine(line);
             }
 
             return template.Replace("FUNCTION_BLOCK", functionBlock.ToString());

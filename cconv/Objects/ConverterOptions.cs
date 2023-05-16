@@ -9,6 +9,16 @@
         public string OutputPath { get; private set; } = AppContext.BaseDirectory;
 
         /// <summary>
+        /// Used for Unit Tests Only
+        /// </summary>
+        public ConverterOptions(string inputLibrary, string outputLanguage, string outputPath)
+        {
+            InputLibrary = inputLibrary;
+            OutputLanguage = outputLanguage;
+            OutputPath = outputPath;
+        }
+
+        /// <summary>
         /// Accepts the string[] from the command line and parses them
         /// </summary>
         /// <param name="commandLineArguments"></param>

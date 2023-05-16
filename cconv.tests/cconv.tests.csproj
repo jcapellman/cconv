@@ -20,4 +20,10 @@
     <ProjectReference Include="..\cconv\cconv.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="TestData\Bibliothek.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
