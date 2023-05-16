@@ -111,10 +111,9 @@ namespace cconv.Converters.Base
             var resourceStream = assembly.GetManifestResourceStream(resourceName)
                 ?? throw new ArgumentOutOfRangeException($"Could not retrieve the {resourceName}");
 
-            byte[] resourceBytes = new byte[resourceStream.Length];
-            resourceStream.Read(resourceBytes, 0, (int)resourceStream.Length);
+            var reader = new StreamReader(resourceStream);
 
-            return Encoding.UTF8.GetString(resourceBytes);
+            return reader.ReadToEnd();
         }
 
         public void Convert(ConverterOptions options)
