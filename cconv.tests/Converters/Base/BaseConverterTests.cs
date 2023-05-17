@@ -38,6 +38,8 @@ namespace cconv.tests.Converters.Base
             // Act
             var converter = BaseConverter.GetConverter("Python");
 
+            Assert.IsNotNull(converter);
+
             var options = new ConverterOptions(inputLibrary: fileName, outputLanguage: "Python", outputPath: AppContext.BaseDirectory);
 
             converter.Convert(options);
