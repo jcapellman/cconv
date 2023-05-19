@@ -55,17 +55,12 @@ namespace cconv.Converters.Base
                 throw new ArgumentException($"{fileName} was not a valid C# library");
             }
 
-            var types = asm.GetTypes();
+            var types = asm.GetTypes().Where(a => a.IsPublic);
 
             var result = new Dictionary<string, List<MethodInfo>>();
 
             foreach (var type in types)
             {
-                if (!type.IsPublic)
-                {
-                    continue;
-                }
-
                 var methodInfos = type.GetMethods().Where(a => a.Attributes.HasFlag(MethodAttributes.Public) &&
                     a.Attributes.HasFlag(MethodAttributes.Static)).ToList();
 
@@ -73,6 +68,7 @@ namespace cconv.Converters.Base
 
                 foreach (MethodInfo method in methodInfos)
                 {
+                    // Function decorator is required for calling from non-IL languages
                     if (method.GetCustomAttribute<UnmanagedCallersOnlyAttribute>() is null)
                     {
                         continue;
